@@ -405,6 +405,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: arbusto
       objectReference: {fileID: 0}
+    - target: {fileID: 2400136530888231337, guid: ce346e80aeb0538419f7f1068b5443bd, type: 3}
+      propertyPath: m_TagString
+      value: arbusto
+      objectReference: {fileID: 0}
     - target: {fileID: 2669674466207372808, guid: ce346e80aeb0538419f7f1068b5443bd, type: 3}
       propertyPath: m_SortingOrder
       value: 4
