@@ -39,14 +39,15 @@ public class arbustacion : MonoBehaviour
 
     public void consumir() 
     { 
-      if (comida > 0)
+        if (comida > 0)
         {
             comida--;
         }
 
-        if (comida == 1)
+        if (comida == 0)
         {
-           Destroy(gameObject);
+            Destroy(gameObject);
+            print("destruido");
         }
     }
 
