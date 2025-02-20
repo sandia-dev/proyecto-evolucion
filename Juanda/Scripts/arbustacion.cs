@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class arbustacion : MonoBehaviour
@@ -41,10 +42,13 @@ public class arbustacion : MonoBehaviour
             tiemposexo += Time.deltaTime;
             if (tiemposexo > 10)
             {
-                Instantiate(arbustofollador, new Vector3 (
+                GameObject hijo;
+                
+                hijo = Instantiate(arbustofollador, new Vector3 (
                     transform.position.x + Random.Range(-5,5), 
                     transform.position.y + Random.Range(-5,5), 0), 
                     transform.rotation);
+                hijo.GetComponent<arbustacion>().tiemposexo = 0;
                 tiemposexo = 0;
             }
             
