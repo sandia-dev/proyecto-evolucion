@@ -5,6 +5,7 @@ public class Monigote : MonoBehaviour
     public float velocidad;
     public int hambre = 10;
     public int sed;
+    public float radius = 5;
 
     public float consumoEnergetico;
     float delayConsumo;
@@ -49,7 +50,7 @@ public class Monigote : MonoBehaviour
             }
             else
             {
-                target.position = new Vector3(Random.Range(-5,5), Random.Range(-5,5), 0);
+                target.position = GetRandomPosition2D(transform.position, radius);
             }
         }
 
@@ -113,4 +114,19 @@ public class Monigote : MonoBehaviour
             comida = null;
         }
     }
+
+
+    Vector3 GetRandomPosition2D(Vector3 center, float distance)
+    {
+        float angle = Random.value * 360f; // Ángulo aleatorio en grados
+        float radians = angle * Mathf.Deg2Rad; // Convertimos a radianes
+
+        // Calculamos la posición en un círculo
+        Vector3 offset = new Vector3(Mathf.Cos(radians), Mathf.Sin(radians), 0) * distance;
+
+        return center + offset;
+    }
+
+
+
 }

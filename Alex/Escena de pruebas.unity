@@ -203,7 +203,7 @@ Transform:
   m_GameObject: {fileID: 436489846}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.77, y: -6.16, z: 0}
+  m_LocalPosition: {x: -0.04, y: 1.17, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -224,6 +224,7 @@ MonoBehaviour:
   velocidad: 3
   hambre: 6
   sed: 0
+  radius: 5
   consumoEnergetico: 5
   target: {fileID: 2064667553}
   comida: {fileID: 0}
@@ -292,6 +293,37 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 7
+--- !u!1 &587074111
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 587074112}
+  m_Layer: 0
+  m_Name: objetivo (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &587074112
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 587074111}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.86, y: -3.33, z: 0.06725233}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &650276920
 GameObject:
   m_ObjectHideFlags: 0
@@ -429,18 +461,18 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!1 &1409964589 stripped
+--- !u!1 &1019780595 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2400136530888231337, guid: ce346e80aeb0538419f7f1068b5443bd, type: 3}
-  m_PrefabInstance: {fileID: 1614516767}
+  m_PrefabInstance: {fileID: 1458341287}
   m_PrefabAsset: {fileID: 0}
---- !u!61 &1409964590
+--- !u!61 &1019780596
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1409964589}
+  m_GameObject: {fileID: 1019780595}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
@@ -480,7 +512,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.96, y: 1.55}
   m_EdgeRadius: 0
---- !u!1001 &1614516767
+--- !u!1001 &1458341287
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -490,11 +522,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1241908086871164236, guid: ce346e80aeb0538419f7f1068b5443bd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.3633318
+      value: 3.03
       objectReference: {fileID: 0}
     - target: {fileID: 1241908086871164236, guid: ce346e80aeb0538419f7f1068b5443bd, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.8051016
+      value: -1.04
       objectReference: {fileID: 0}
     - target: {fileID: 1241908086871164236, guid: ce346e80aeb0538419f7f1068b5443bd, type: 3}
       propertyPath: m_LocalPosition.z
@@ -530,7 +562,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2400136530888231337, guid: ce346e80aeb0538419f7f1068b5443bd, type: 3}
       propertyPath: m_Name
-      value: arbusto
+      value: arbusto (1)
       objectReference: {fileID: 0}
     - target: {fileID: 2400136530888231337, guid: ce346e80aeb0538419f7f1068b5443bd, type: 3}
       propertyPath: m_TagString
@@ -542,7 +574,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2400136530888231337, guid: ce346e80aeb0538419f7f1068b5443bd, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1409964590}
+      addedObject: {fileID: 1019780596}
   m_SourcePrefab: {fileID: 100100000, guid: ce346e80aeb0538419f7f1068b5443bd, type: 3}
 --- !u!1 &2064667552
 GameObject:
@@ -582,4 +614,5 @@ SceneRoots:
   - {fileID: 650276923}
   - {fileID: 436489848}
   - {fileID: 2064667553}
-  - {fileID: 1614516767}
+  - {fileID: 587074112}
+  - {fileID: 1458341287}
