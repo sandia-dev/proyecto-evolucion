@@ -5,6 +5,8 @@ public class arbustacion : MonoBehaviour
     public int comida = 5;
     public float tiempo;
     public GameObject[] frutos;
+    public float tiemposexo;
+    public GameObject arbustofollador;
     void Start()
     {
         
@@ -34,7 +36,23 @@ public class arbustacion : MonoBehaviour
                 frutos[i].SetActive(true);
             }
         }
-
+        if (comida == 5) 
+        {
+            tiemposexo += Time.deltaTime;
+            if (tiemposexo > 10)
+            {
+                Instantiate(arbustofollador, new Vector3 (
+                    transform.position.x + Random.Range(-5,5), 
+                    transform.position.y + Random.Range(-5,5), 0), 
+                    transform.rotation);
+                tiemposexo = 0;
+            }
+            
+        }
+        else
+        {
+            tiemposexo = 0;
+        }
     }
 
     public void consumir() 
