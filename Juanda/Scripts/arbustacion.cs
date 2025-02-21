@@ -40,7 +40,7 @@ public class arbustacion : MonoBehaviour
         if (comida == 5) 
         {
             tiemposexo += Time.deltaTime;
-            if (tiemposexo > 10)
+            if (tiemposexo > 60)
             {
                 GameObject hijo;
                 
@@ -61,14 +61,15 @@ public class arbustacion : MonoBehaviour
 
     public void consumir() 
     { 
-      if (comida > 0)
+        if (comida > 0)
         {
             comida--;
         }
 
-        if (comida == 1)
+        if (comida == 0)
         {
-           Destroy(gameObject);
+            Destroy(gameObject);
+            print("destruido");
         }
     }
 
