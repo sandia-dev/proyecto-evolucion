@@ -23,7 +23,7 @@ public class Monigote : MonoBehaviour
 
     public List<Transform> vision = new List<Transform>();
 
-    public string[] tareas;
+    public List<string> tareas = new List<string>();
 
     public string estado = "explorando";
     void Start()
@@ -39,13 +39,17 @@ public class Monigote : MonoBehaviour
         {
             hambre--;
             delayConsumo = 0;
-            if (hambre < 5)
+            if (hambre <= 5)
             {
-                estado = "hambriento";
+                
+                if (!tareas.Contains("hambriento"))
+                {
+                    AddTask("hambriento");
+                }
             }
             else if (hambre == 10)
             {
-                estado = "explorando";
+                FinishTask("hambriento");
             }
             if (hambre + sed == 0)
             {
@@ -62,8 +66,13 @@ public class Monigote : MonoBehaviour
                 sed--;
                 delaySed = 0;
             }
-        } 
+        }
 
+        estado = tareas[0];
+        if (!tareas.Contains("hambriento") && !tareas.Contains("sediento"))
+        {
+            estado = "explorando";
+        }
 
         if (estado == "explorando")
         {
@@ -93,13 +102,11 @@ public class Monigote : MonoBehaviour
 
 
         //////////////////////////////
-        if (estado == "hambriento" && comida != null)
+        if (estado == "hambriento" && comida != null /*&& tareas[0] == "hambriento"*/)
         {
-            
+
+            print(estado +", " + comida.name);
             float distancia = Vector2.Distance(transform.position, comida.position);
-            
-            
-           
             if (distancia > 1)
             {
                 transform.position = Vector3.MoveTowards(transform.position, comida.position, velocidad * Time.deltaTime);
@@ -107,37 +114,29 @@ public class Monigote : MonoBehaviour
             }
             else
             {
-                
-                    delayComer += Time.deltaTime;
+
+                delayComer += Time.deltaTime;
                 if (delayComer > velocidadComer)
                 {
                     comida.GetComponent<arbustacion>().consumir();
                     hambre++;
-                            
+
                     delayComer = 0;
                 }
                 if (comida.GetComponent<arbustacion>().comida == 0)
                 {
                     estado = "explorando";
                 }
-                
+
             }
-            
+
         }
         else
         {
             estado = "explorando";
         }
 
-
-
-
-
-
-
         CleanVisionList();
-
-
         
     }
 
@@ -167,6 +166,16 @@ public class Monigote : MonoBehaviour
     void CleanVisionList()
     {
         vision.RemoveAll(item => item == null);
+    }
+
+    void AddTask(string task)
+    {
+        tareas.Add(task);
+    }
+
+    void FinishTask(string task)
+    {
+        tareas.Remove(task);
     }
 
 
