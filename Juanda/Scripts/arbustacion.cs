@@ -4,10 +4,13 @@ using UnityEngine;
 public class arbustacion : MonoBehaviour
 {
     public int comida = 5;
-    public float tiempo;
+    float tiempo;
+    public float tiempoRecuperacion = 5;
     public GameObject[] frutos;
     public float tiemposexo;
     public GameObject arbustofollador;
+
+    public bool reproduccion;
     void Start()
     {
         
@@ -19,7 +22,7 @@ public class arbustacion : MonoBehaviour
         if (comida < 5) 
         {
             tiempo += Time.deltaTime;
-            if (tiempo > 10 )
+            if (tiempo > tiempoRecuperacion )
             {
                 comida++;
                 tiempo = 0;
@@ -37,7 +40,7 @@ public class arbustacion : MonoBehaviour
                 frutos[i].SetActive(true);
             }
         }
-        if (comida == 5) 
+        if (comida == 5 && reproduccion) 
         {
             tiemposexo += Time.deltaTime;
             if (tiemposexo > 10)
@@ -66,7 +69,7 @@ public class arbustacion : MonoBehaviour
             comida--;
         }
 
-        if (comida == 0)
+        if (comida == 0 && reproduccion)
         {
             Destroy(gameObject);
             print("destruido");

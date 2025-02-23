@@ -1,10 +1,12 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Monigote : MonoBehaviour
 {
     public float velocidad;
     public int hambre = 10;
-    public int sed;
+    public int sed = 10;
     public float radius = 5;
 
     public float consumoEnergetico;
@@ -15,7 +17,13 @@ public class Monigote : MonoBehaviour
 
 
     public float velocidadComer = 2;
+
     float delayComer;
+    float delaySed = 0;
+
+    public List<Transform> vision = new List<Transform>();
+
+    public string[] tareas;
 
     public string estado = "explorando";
     void Start()
@@ -35,12 +43,29 @@ public class Monigote : MonoBehaviour
             {
                 estado = "hambriento";
             }
+            else if (hambre == 10)
+            {
+                estado = "explorando";
+            }
+            if (hambre + sed == 0)
+            {
+                Destroy(gameObject);
+            }
         }
 
-        
+        if (delayComer == 0) // La unica ocasion en la que está quieto es cuando está comiendo, así que uso DelayComer para detectar cuando está en movimiento
+        {
+            
+            delaySed += Time.deltaTime;
+            if (delaySed > 3)
+            {
+                sed--;
+                delaySed = 0;
+            }
+        } 
 
 
-        else if (estado == "explorando")
+        if (estado == "explorando")
         {
             float distancia = Vector2.Distance(target.position, transform.position);
             if (distancia > 1)
@@ -54,12 +79,27 @@ public class Monigote : MonoBehaviour
             }
         }
 
+        Transform nearest = GetNearestTransform();
+        if (nearest != null && nearest.CompareTag("arbusto"))
+        {
+            comida = nearest;
+        }
+        else
+        {
+            comida = null;
+        }
+
+
+
 
         //////////////////////////////
         if (estado == "hambriento" && comida != null)
         {
+            
             float distancia = Vector2.Distance(transform.position, comida.position);
-            print(distancia);
+            
+            
+           
             if (distancia > 1)
             {
                 transform.position = Vector3.MoveTowards(transform.position, comida.position, velocidad * Time.deltaTime);
@@ -67,17 +107,20 @@ public class Monigote : MonoBehaviour
             }
             else
             {
-                if (comida.CompareTag("arbusto"))
-                {
+                
                     delayComer += Time.deltaTime;
-                    if (delayComer > velocidadComer)
-                    {
-                        comida.GetComponent<arbustacion>().consumir();
-                        hambre++;
-                        print("comer");
-                        delayComer = 0;
-                    }
+                if (delayComer > velocidadComer)
+                {
+                    comida.GetComponent<arbustacion>().consumir();
+                    hambre++;
+                            
+                    delayComer = 0;
                 }
+                if (comida.GetComponent<arbustacion>().comida == 0)
+                {
+                    estado = "explorando";
+                }
+                
             }
             
         }
@@ -85,35 +128,47 @@ public class Monigote : MonoBehaviour
         {
             estado = "explorando";
         }
-        
+
+
+
+
+
+
+
+        CleanVisionList();
+
 
         
-            
-        
+    }
 
-
-
-
-
-        
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("obstaculo"))
+        {
+            Vector3 normal = target.position-transform.position;
+            target.position = -normal.normalized * radius;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("arbusto"))
+        if (!vision.Contains(collision.transform) && collision != null)
         {
-            comida = collision.gameObject.transform;
+            vision.Add(collision.transform);
         }
-        
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("arbusto"))
-        {
-            comida = null;
-        }
+        vision.Remove(collision.transform);
     }
+
+    // Limpiar referencias a objetos destruidos
+    void CleanVisionList()
+    {
+        vision.RemoveAll(item => item == null);
+    }
+
 
 
     Vector3 GetRandomPosition2D(Vector3 center, float distance)
@@ -128,5 +183,23 @@ public class Monigote : MonoBehaviour
     }
 
 
+    Transform GetNearestTransform()
+    {
+        Transform nearest = null;
+        float minDist = Mathf.Infinity; // Distancia inicial muy grande
+        Vector2 currentPos = transform.position;
 
+        foreach (Transform t in vision)
+        {
+            float dist = Vector2.Distance(currentPos, t.position);
+
+            if (dist < minDist)
+            {
+                minDist = dist;
+                nearest = t;
+            }
+        }
+
+        return nearest;
+    }
 }
