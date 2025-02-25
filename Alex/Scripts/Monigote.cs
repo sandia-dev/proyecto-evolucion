@@ -9,19 +9,26 @@ public class Monigote : MonoBehaviour
     public int hambre = 10;
     public int sed = 10;
     public float radius = 5;
+    public bool impulsoReproductivo;
+    public float madurezReproductiva;
+
+    float edad;
 
     public float consumoEnergetico;
     float delayConsumo;
 
-    public Transform target;
+    
     public Transform comida;
     public Transform agua;
+    public Transform pareja;
 
-    public float velocidadComer = 2;
+    float velocidadComer = 2;
 
     float delayComer;
     float delayBeber;
     float delaySed = 0;
+
+    CircleCollider2D fov;
 
     public bool isMoving;
 
@@ -33,18 +40,36 @@ public class Monigote : MonoBehaviour
 
 
     public Vector3 pos;
+
+    public GameObject children;
+
+
+    public float energia;
     void Start()
     {
-
+        fov = GetComponent<CircleCollider2D>();
+        fov.radius = radius;
+        //consumoEnergetico = velocidad;
     }
 
     void Update()
     {
+        edad += Time.deltaTime;
+        energia = hambre + sed;
 
-        target.position = pos;
+        if (edad > madurezReproductiva && energia > 15)
+        {
+            impulsoReproductivo = true;
+            AddTask("reproducir");
+        }
+        else
+        {
+            impulsoReproductivo = false;
+            FinishTask("reproducir");
+        }
 
         delayConsumo += Time.deltaTime;
-        if (delayConsumo > consumoEnergetico)
+        if (delayConsumo > consumoEnergetico && isMoving)
         {
             hambre--;
             delayConsumo = 0;
@@ -60,7 +85,7 @@ public class Monigote : MonoBehaviour
                 delayComer = 0;
             }
 
-            if (hambre + sed == 0)
+            if (energia == 0)
             {
                 Destroy(gameObject);
             }
@@ -69,7 +94,7 @@ public class Monigote : MonoBehaviour
         if (isMoving)
         {
             delaySed += Time.deltaTime;
-            if (delaySed > 3)
+            if (delaySed > consumoEnergetico)
             {
                 sed--;
                 delaySed = 0;
@@ -88,6 +113,7 @@ public class Monigote : MonoBehaviour
         // Buscar comida y agua en la visión
         comida = GetNearestTransform("arbusto");
         agua = GetNearestTransform("agua");
+        pareja = GetNearestTransform("monigote");
 
         // Si hay tareas, actualizar el estado
         if (tareas.Any())
@@ -99,7 +125,7 @@ public class Monigote : MonoBehaviour
             estado = "explorando";
         }
 
-        // 🟢 Si no hay comida ni agua disponibles, eliminar tareas de hambre/sed y volver a explorar
+        
         if (comida == null && tareas.Contains("hambriento"))
         {
             FinishTask("hambriento");
@@ -109,7 +135,11 @@ public class Monigote : MonoBehaviour
             FinishTask("sediento");
         }
 
-        if (estado == "hambriento" && comida != null)
+        if (estado == "reproducir" && pareja != null && pareja.GetComponent<Monigote>().energia > 15)
+        {
+            MoveToPartner();
+        }
+        else if (estado == "hambriento" && comida != null)
         {
             MoveToFood();
         }
@@ -120,14 +150,14 @@ public class Monigote : MonoBehaviour
         else
         {
             estado = "explorando";
-            isMoving = true;  // 🟢 Asegurar que vuelve a moverse
+            isMoving = true;  
         }
 
-        // 🟢 Movimiento cuando está explorando
+        // Movimiento cuando esta explorando
         if (estado == "explorando")
         {
             
-            if (Vector2.Distance(transform.position, target.position) < 1)
+            if (Vector2.Distance(transform.position, pos) < 1)
             {
                 pos = GetRandomPosition2D(transform.position, radius);
             }
@@ -139,7 +169,61 @@ public class Monigote : MonoBehaviour
     }
 
 
+    
+
     // Mover hacia la comida
+
+    void MoveToPartner()
+    {
+        float distancia = Vector2.Distance(transform.position, pareja.position);
+        if (distancia > 2)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, pareja.position, velocidad * Time.deltaTime);
+        }
+        else
+        {
+
+            Reproducirse();
+
+            FinishTask("reproducir");
+            estado = "explorando";
+            comida = null;
+
+           
+            isMoving = false;
+        }
+    }
+
+    Color ObtenerColorMedio(Color c1, Color c2)
+    {
+        float r = (c1.r + c2.r) / 2;
+        float g = (c1.g + c2.g) / 2;
+        float b = (c1.b + c2.b) / 2;
+
+        return new Color(r, g, b);
+    }
+
+    void Reproducirse()
+    {
+        Monigote partner = pareja.GetComponent<Monigote>();
+        if (partner.energia < energia)
+        {
+            partner.hambre -= 3;
+            partner.sed -= 3;
+            hambre -= 3;
+            sed -= 3;
+            print(gameObject.name + " :" + energia + " " + partner.energia);
+
+            Monigote hijo = Instantiate(children, transform.position, transform.rotation).GetComponent<Monigote>();
+            hijo.hambre = 10;
+            hijo.sed = 10;
+            hijo.velocidad = (velocidad + partner.velocidad) / 2;
+            hijo.radius = (radius + partner.radius) / 2;
+            hijo.madurezReproductiva = (madurezReproductiva + partner.madurezReproductiva) / 2;
+            hijo.GetComponent<SpriteRenderer>().color = ObtenerColorMedio(partner.GetComponent<SpriteRenderer>().color, GetComponent<SpriteRenderer>().color);
+        }
+    }
+
     void MoveToFood()
     {
         float distancia = Vector2.Distance(transform.position, comida.position);
@@ -160,7 +244,7 @@ public class Monigote : MonoBehaviour
             {
                 FinishTask("hambriento");
                 estado = "explorando";
-                comida = null; // Eliminar la referencia a la comida si ya no hay más
+                comida = null;
             }
             isMoving = false;
         }
@@ -252,7 +336,7 @@ public class Monigote : MonoBehaviour
 
         foreach (Transform t in vision)
         {
-            // Si se especifica un tag y el objeto no lo tiene, lo ignoramos
+            
             if (!string.IsNullOrEmpty(tag) && !t.CompareTag(tag))
             {
                 continue;
