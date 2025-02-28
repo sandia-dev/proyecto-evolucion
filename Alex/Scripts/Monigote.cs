@@ -44,6 +44,8 @@ public class Monigote : MonoBehaviour
     public GameObject children;
 
 
+
+
     public float energia;
     void Start()
     {
@@ -56,6 +58,7 @@ public class Monigote : MonoBehaviour
     {
         edad += Time.deltaTime;
         energia = hambre + sed;
+        consumoEnergetico = velocidad * -2 + 20;
 
         if (edad > madurezReproductiva && energia > 15)
         {
@@ -69,32 +72,39 @@ public class Monigote : MonoBehaviour
         }
 
         delayConsumo += Time.deltaTime;
-        if (delayConsumo > consumoEnergetico && isMoving)
+        if (delayConsumo > consumoEnergetico && isMoving )
         {
-            hambre--;
-            delayConsumo = 0;
+            if (hambre > 0)
+            {
+                hambre--;
+                delayConsumo = 0;
+            }
+           
 
             if (hambre <= 5)
             {
                 AddTask("hambriento");
             }
-            else if (hambre > 9)
-            {
-                FinishTask("hambriento");
-                isMoving = true;
-                delayComer = 0;
-            }
+            
+        }
 
-            if (energia == 0)
-            {
-                Destroy(gameObject);
-            }
+        if (hambre > 9)
+        {
+            FinishTask("hambriento");
+            estado = "explorando";
+            isMoving = true;
+            delayComer = 0;
+        }
+
+        if (energia < 6)
+        {
+            Destroy(gameObject);
         }
 
         if (isMoving)
         {
             delaySed += Time.deltaTime;
-            if (delaySed > consumoEnergetico)
+            if (delaySed > consumoEnergetico && sed > 0)
             {
                 sed--;
                 delaySed = 0;
