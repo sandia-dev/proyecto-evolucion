@@ -43,7 +43,7 @@ public class arbustacion : MonoBehaviour
         if (comida == 5 && reproduccion) 
         {
             tiemposexo += Time.deltaTime;
-            if (tiemposexo > 60)
+            if (tiemposexo > 20)
             {
                 GameObject hijo;
                 
